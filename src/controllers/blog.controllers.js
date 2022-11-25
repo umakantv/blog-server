@@ -25,26 +25,29 @@ async function getBlogsPaginated(req, res) {
             pageSize = 10, 
             page = 1,
             sortBy = 'createdAt',
-            sortOrder = 'desc' 
+            sortOrder = 'desc',
+            authorId
         } = req.query;
-    
-        const totalBlogs = await blogModel.find({
+
+        const filter = {
             title: {
                 $regex: search
             }
-        }).count();
-    
-        const blogs = await blogModel.find({
-            title: {
-                $regex: search
-            }
-        })
+        };
+
+        if (authorId) {
+            filter['author._id'] = authorId;
+        }
+
+        const totalBlogs = await blogModel.find(filter).count();
+
+        const blogs = await blogModel.find(filter)
         .sort({
             [sortBy]: sortOrder === 'asc' ? 1 : -1
         })
         .limit(pageSize)
         .skip(pageSize * (page - 1));
-    
+
         return res.send({
             status: 'success',
             data: {
