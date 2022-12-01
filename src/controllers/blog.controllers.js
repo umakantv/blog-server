@@ -1,7 +1,18 @@
 const blogModel = require("../database/blog.model");
 const userModel = require("../database/user.model");
+const { validate } = require("../validators");
+const { getBlogsValidator, createBlogValidator, idValidator } = require("../validators/blog.validators");
 
 async function getBlogsByUserId(req, res) {
+
+    const error = validate(idValidator, req.params.userId)
+
+    if (error) {
+        return res.status(400).send({
+            status: 'error',
+            message: error,
+        })
+    }
 
     const {userId} = req.params;
 
@@ -18,6 +29,15 @@ async function getBlogsByUserId(req, res) {
 }
 
 async function getBlogsPaginated(req, res) {
+
+    const error = validate(getBlogsValidator, req.query)
+
+    if (error) {
+        return res.status(400).send({
+            status: 'error',
+            message: error,
+        })
+    }
 
     try {
         let {
@@ -68,6 +88,16 @@ async function getBlogsPaginated(req, res) {
 async function createBlogPost(req, res) {
 
     const blog = req.body;
+
+    const error = validate(createBlogValidator, blog)
+
+    if (error) {
+        return res.status(400).send({
+            status: 'error',
+            message: error,
+        })
+    }
+
     const {user} = req;
 
     if (!user) {
@@ -99,6 +129,15 @@ async function createBlogPost(req, res) {
 }
 
 async function getBlogById(req, res) {
+
+    const error = validate(idValidator, req.params.id)
+
+    if (error) {
+        return res.status(400).send({
+            status: 'error',
+            message: error,
+        })
+    }
 
     const {id} = req.params;
 
