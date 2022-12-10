@@ -1,6 +1,7 @@
 
 const { PORT, CAPTURE_PROMETHEUS_METRIC } = require('./config');
 
+const path = require('path')
 const tracer = require("./utils/tracing")("blog-service");
 const express = require('express');
 
@@ -18,7 +19,11 @@ initiateMiddlewares(app, {
 // Custom Middlewares
 initiateRoutes(app);
 
-app.get('*', express.static('public'));
+app.use(express.static('public'));
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'index.html'));
+})
 
 connectDatabase()
 .then(() => {
