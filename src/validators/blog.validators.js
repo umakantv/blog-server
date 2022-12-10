@@ -8,7 +8,7 @@ const createBlog = Joi.object({
 const id = Joi.string().required().min(10);
 
 const getBlogs = Joi.object({
-    search: Joi.string().empty(),
+    search: Joi.string().empty().allow(null, ''),
     authorId: Joi.string().empty(),
     pageSize: Joi.number().min(3).max(40).required(),
     page: Joi.number().min(1).required(),
