@@ -1,6 +1,7 @@
 
 const { PORT, CAPTURE_PROMETHEUS_METRIC } = require('./config');
 
+const tracer = require("./utils/tracing")("blog-service");
 const express = require('express');
 
 const { connectDatabase } = require('./database/connectDB');
