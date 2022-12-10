@@ -1,25 +1,11 @@
 # Blog App
 
-## Todo
+# Tracing
 
-# Phase I
+https://medium.com/jaegertracing/jaeger-tracing-a-friendly-guide-for-beginners-7b53a4a568ca
+https://www.aspecto.io/blog/getting-started-with-opentelemetry-node/
+https://www.aspecto.io/opentelemetry-bootcamp/
+https://www.jaegertracing.io/docs/1.30/sampling/
 
-### Like/Unlike
-* Like
-* Unlike
-* Get user liked a particular post
-
-### Collections/List
-
-* Private/Public
-
-# Phase II
-
-### Like/Unlike
-
-* Get liked posts 
-
-### Collections/List
-
-* Invite users to collaborate
-
+![trace](assets/trace.png)
+![trace-new](assets/trace-improved.png)
