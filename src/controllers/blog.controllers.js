@@ -59,14 +59,15 @@ async function getBlogsPaginated(req, res) {
             filter['author._id'] = authorId;
         }
 
-        const totalBlogs = await blogModel.find(filter).count();
-
-        const blogs = await blogModel.find(filter)
-        .sort({
-            [sortBy]: sortOrder === 'asc' ? 1 : -1
-        })
-        .limit(pageSize)
-        .skip(pageSize * (page - 1));
+        const [totalBlogs, blogs] = await Promise.all([
+            blogModel.find(filter).count(), 
+            blogModel.find(filter)
+                .sort({
+                    [sortBy]: sortOrder === 'asc' ? 1 : -1
+                })
+                .limit(pageSize)
+                .skip(pageSize * (page - 1))
+            ]);
 
         return res.send({
             status: 'success',
