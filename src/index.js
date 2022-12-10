@@ -1,5 +1,5 @@
 
-const { PORT } = require('./config');
+const { PORT, CAPTURE_PROMETHEUS_METRIC } = require('./config');
 
 const express = require('express');
 
@@ -10,7 +10,9 @@ const initiateMiddlewares = require('./middlewares');
 const app = express();
 
 // Standard Middlewares
-initiateMiddlewares(app);
+initiateMiddlewares(app, {
+    captureMetrics: CAPTURE_PROMETHEUS_METRIC
+});
 
 // Custom Middlewares
 initiateRoutes(app);
