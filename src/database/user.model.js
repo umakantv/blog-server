@@ -8,15 +8,20 @@ const userSchema = new mongoose.Schema({
         enum: ['Male', 'Female', 'Other']
     },
     image: String,
+    coverImage: String,
     username: String,
     githubUsername: String,
-    email: {
-        type: String,
-    },
     authType: {
         type: String,
         enum: ['github', 'google', 'facebook', 'email-password'],
         default: 'email-password'
+    },
+    email: {
+        type: String,
+    },
+    password: {
+        type: String,
+        minLength: 8
     },
     blogsCount: {
         type: Number,
@@ -29,10 +34,6 @@ const userSchema = new mongoose.Schema({
     followerCount: {
         type: Number,
         default: 0,
-    },
-    password: {
-        type: String,
-        minLength: 8
     },
 })
 

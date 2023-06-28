@@ -6,6 +6,7 @@ async function connectDatabase() {
     return new Promise((resolve, reject) => {
         // protocol://hostname:port/db_name
         // protocol://username@password:hostname:port/db_name
+        console.log(DB_CONNECTTION_STRING)
         mongoose.connect(DB_CONNECTTION_STRING, (err) => {
             if (err) {
                 console.log('Error conencting to DB')
