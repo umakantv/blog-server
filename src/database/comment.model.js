@@ -8,6 +8,7 @@ const commentSchema = new mongoose.Schema({
     },
     author: {
         _id: String,
+        username: String,
         name: String,
         image: String,
     },
