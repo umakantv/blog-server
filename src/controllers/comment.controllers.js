@@ -1,29 +1,32 @@
-const blogModel = require("../database/blog.model");
+const blogModel = require("../database/post.model");
 const commentsModel = require("../database/comment.model");
 
-async function getBlogComments(blogId) {
+async function getBlogComments(postId) {
     return commentsModel.find({
-        blogId
+        postId
     }).sort({
         createdAt: -1
     })
 }
 
-async function getCommentsByBlogId(req, res) {
-    const {id} = req.params;
-
-    const comments = await getBlogComments(id);
-
-    return res.send({
-        status: 'success',
-        data: comments
-    })
+async function getCommentsByPostId(req, res, next) {
+    try {
+        const {id} = req.params;
+    
+        const comments = await getBlogComments(id);
+    
+        return res.send({
+            status: 'success',
+            data: comments
+        })
+    } catch(err) {
+        next(err)
+    }
 }
 
-async function createComment(req, res) {
+async function createComment(req, res, next) {
 
     try {
-
         const comment = req.body;
         const {user} = req;
     
@@ -59,10 +62,7 @@ async function createComment(req, res) {
         })
     } catch(err) {
 
-        return res.status(500).send({
-            status: 'error',
-            message: 'Something went wrong'
-        })
+        next(err)
     }
 }
 
@@ -85,7 +85,7 @@ async function editComment(req, res) {}
 module.exports = {
     getBlogComments,
     createComment,
-    getCommentsByBlogId,
+    getCommentsByPostId,
     editComment,
     deleteComment
 }
