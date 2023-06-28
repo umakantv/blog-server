@@ -5,9 +5,10 @@ const userSchema = new mongoose.Schema({
     name: String,
     gender: {
         type: String,
-        enum: ['Male', 'Female', 'Other']
+        enum: ['male', 'female', 'other']
     },
     image: String,
+    about: String,
     coverImage: String,
     username: String,
     githubUsername: String,

@@ -13,6 +13,7 @@ const postSchema = new mongoose.Schema({
     excerpt: String,
     author: {
         _id: String,
+        username: String,
         name: String,
         image: String,
     },

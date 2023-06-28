@@ -4,6 +4,7 @@ require('dotenv').config({
 
 const { connectDatabase } = require("../src/database/connectDB.js")
 const { faker } = require('@faker-js/faker')
+const bcrypt = require('bcryptjs')
 const crypto = require('crypto')
 const postModel = require("../src/database/post.model.js")
 const userModel = require("../src/database/user.model.js")
@@ -43,26 +44,29 @@ async function createDummyUsers(count) {
 
     const users = []
 
+    const password = bcrypt.hashSync('password');
+
     for (let i = 0; i < count; i++) {
-        const gender = ['Male', 'Female', 'Other'][crypto.randomInt(0, 3)]
+        const gender = ['male', 'female', 'other'][crypto.randomInt(0, 3)]
         const randomModule = imageModules[crypto.randomInt(0, imageModules.length)]
-        let coverImage = faker.image[randomModule](1200, 630, true);
+        let coverImage = faker.image.urlLoremFlickr({ category: randomModule, width: 1200, height: 630 });
+        // let profileImage = faker.image.urlLoremFlickr({ category: gender, height: 240, width: 240 });
 
         const user = {
-            name: faker.name.fullName({sex: gender}),
+            name: faker.person.fullName({sex: gender}),
             gender,
-            image: faker.image.avatar(),
+            image: faker.image.avatarLegacy(),
             coverImage: coverImage,
             username: faker.internet.userName(),
             authType: 'email-password',
             email: faker.internet.email(),
-            password: faker.internet.password(),
+            password,
         }
 
         users.push(user);
     }
 
-    console.log(users)
+    console.log('Added', users.length, 'users')
     await userModel.insertMany(users);
 }
 
@@ -78,7 +82,7 @@ async function createDummyPosts(count) {
         const title = faker.hacker.phrase()
         const paragraphs = faker.lorem.paragraphs(crypto.randomInt(3, 6))
         const randomModule = imageModules[crypto.randomInt(0, imageModules.length)]
-        let coverImage = faker.image[randomModule](1200, 630, true)
+        let coverImage = faker.image.urlLoremFlickr({ category: randomModule, width: 1200, height: 630 });
 
         let tags = []
         let tagCount = crypto.randomInt(2, 5)
@@ -98,6 +102,7 @@ async function createDummyPosts(count) {
             content: paragraphs,
             author: {
                 _id: author._id,
+                username: author.username,
                 name: author.name,
                 image: author.image
             },
@@ -134,6 +139,7 @@ async function addDummyComments(count) {
         const comment = {
             content: faker.lorem.paragraphs(crypto.randomInt(2, 4)),
             author: {
+                username: user.username,
                 userId: user._id,
                 name: user.name,
                 image: user.image,
@@ -164,4 +170,5 @@ async function addTags() {
 connectDatabase()
 // .then(() => addTags())
 // .then(() => createDummyUsers(500))
-.then(() => addDummyComments(10000))
+.then(() => createDummyPosts(5000))
+.then(() => addDummyComments(15000))

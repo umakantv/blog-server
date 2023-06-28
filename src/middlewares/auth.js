@@ -1,6 +1,6 @@
 const logger = require("../utils/logger");
 const LogCodes = require("../config/LogCodes");
-const { findByIdOrFail } = require("../services/users.service");
+const userService = require("../services/users.service");
 const { verifyToken } = require('../utils/tokens');
 
 async function auth(req, res, next) {
@@ -14,7 +14,7 @@ async function auth(req, res, next) {
         try {
             const result = verifyToken(token);
 
-            let user = await findByIdOrFail(result._id);
+            let user = await userService.getUser(result._id);
     
             req.user = user;
 
