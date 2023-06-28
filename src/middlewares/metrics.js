@@ -1,12 +1,13 @@
 const express = require('express');
 const morgan = require('morgan');
 const { collectDefaultMetrics, register, Counter, Gauge, Histogram } = require('prom-client');
+const {APP_NAME: appName} = require('../config')
 
 collectDefaultMetrics({ 
     timeout: 5000,
     // prefix: 'node_app_',
     labels: {
-        app: 'fibonacci-api'
+        app: appName
     }
 });
 
@@ -43,9 +44,9 @@ function updateMetrics(req, res, next) {
     res.addListener('finish', () => {
         // console.log(req.method, req.route, res.statusCode);
         let responseTime = (new Date().valueOf() - startTime)/1000; // convert milliseconds to seconds
-        totalHttpRequestDuration.labels(req.method, req.route.path, 'fibonacci-api').set(responseTime);
-        totalHttpRequestCount.labels(req.method, req.route.path, 'fibonacci-api', res.statusCode).inc();
-        httpRequestDurationBuckets.labels(req.method, req.route.path, 'fibonacci-api', res.statusCode).observe(responseTime);
+        totalHttpRequestDuration.labels(req.method, req.route.path, appName).set(responseTime);
+        totalHttpRequestCount.labels(req.method, req.route.path, appName, res.statusCode).inc();
+        httpRequestDurationBuckets.labels(req.method, req.route.path, appName, res.statusCode).observe(responseTime);
     })
     next();
 }

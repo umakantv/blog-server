@@ -7,17 +7,20 @@ const express = require('express');
 
 const { connectDatabase } = require('./database/connectDB');
 const initiateRoutes = require('./routes');
-const initiateMiddlewares = require('./middlewares');
+const {initiatePreResponseMiddlewares, initiatePostResponseMiddlewares} = require('./middlewares');
 
 const app = express();
 
 // Standard Middlewares
-initiateMiddlewares(app, {
+initiatePreResponseMiddlewares(app, {
     captureMetrics: CAPTURE_PROMETHEUS_METRIC
 });
 
 // Custom Middlewares
 initiateRoutes(app);
+
+// Middlewares after response is sent
+initiatePostResponseMiddlewares(app);
 
 app.use(express.static('public'));
 

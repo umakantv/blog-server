@@ -1,6 +1,7 @@
-const userModel = require("../database/user.model");
-const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require("../config");
+const logger = require("../utils/logger");
+const LogCodes = require("../config/LogCodes");
+const { findByIdOrFail } = require("../services/users.service");
+const { verifyToken } = require('../utils/tokens');
 
 async function auth(req, res, next) {
 
@@ -11,20 +12,24 @@ async function auth(req, res, next) {
     if (token) {
 
         try {
+            const result = verifyToken(token);
 
-            const result = jwt.verify(token, JWT_SECRET);
-    
-            let user = await userModel.findById(result._id);
-    
-            user = user.toJSON();
-    
-            delete user.password;
+            let user = await findByIdOrFail(result._id);
     
             req.user = user;
 
+            logger.info(LogCodes.AUTHENTICATED_REQUEST, {
+                ...req.meta,
+                user_id: user._id,
+            })
+
         } catch(err) {
-            console.log('Error in verifying the token', err);
+            // No action to take
         }
+    }
+
+    if (!req.user) {
+        logger.warn(LogCodes.UNAUTHENTICATED_REQUEST, req.meta)
     }
 
     next();
