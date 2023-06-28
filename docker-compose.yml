@@ -15,3 +15,61 @@ services:
       - 14268:14268
       - 14269:14269
       - 9411:9411
+
+  grafana:
+    image: grafana/grafana-enterprise
+    ports:
+      - "3030:3000"
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./data/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./data/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    networks:
+      - monitoring
+  
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      # - prometheus_data:/prometheus
+      - ./data/prometheus:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    expose:
+      - 9100
+    networks:
+      - monitoring
+
+  fibonacci_api:
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3010:3010"
+      - "3011:3011"
+    volumes:
+      # Inside the container, don't override, don't redirect, leave the folder as it it
+      - /app/node_modules
+      # Inside the container, if application tries to access any file inside the app directory
+      # Redirect that to server folder in this directory outside the container
+      # This is useful for 
+      - ./server:/app
+    networks:
+      - monitoring

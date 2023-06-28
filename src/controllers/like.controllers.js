@@ -1,4 +1,4 @@
-const blogModel = require("../database/blog.model");
+const postModel = require("../database/post.model");
 const commentsModel = require("../database/comment.model");
 
 // TODO

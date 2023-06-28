@@ -1,158 +1,184 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const userModel = require("../database/user.model");
 const GithubService = require('../services/github');
-const { JWT_SECRET } = require('../config');
+const { generateToken } = require('../utils/tokens');
 
-function generateToken(user) {
-    return jwt.sign({
+function generateUserToken(user) {
+
+    return generateToken({
         _id: user._id,
         name: user.name,
         email: user.email,
         image: user.image
-    }, JWT_SECRET);
+    });
 }
 
-async function fetchUsersPaginated(req, res) {
+async function fetchUsersPaginated(req, res, next) {
 
-    const {
-        pageSize = 10, 
-        page = 1,
-        sortBy = 'createdAt',
-        sortOrder = 'desc' 
-    } = req.query;
-
-    const totalUser = await userModel.find().count();
-
-    const users = await userModel.find().select('-password')
-    .sort({
-        [sortBy]: sortOrder === 'asc' ? 1 : -1
-    })
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
-
-    return res.send({
-        status: 'success',
-        data: {
-            totalUser,
-            users,
-            page,
-            pageSize
-        }
-    })
-}
-
-async function fetchUser(req, res) {
-
-    const {id} = req.params;
-
-    const user = await userModel.findById(id)
-
-    if (user) {
-        let userResponse = user.toJSON()
-
-        delete userResponse.password;
-
-        return res.status(200).send({
+    try {
+        const {
+            pageSize = 10, 
+            page = 1,
+            sortBy = 'createdAt',
+            sortOrder = 'desc' 
+        } = req.query;
+    
+        const totalUser = await userModel.find().count();
+    
+        const users = await userModel.find().select('-password')
+        .sort({
+            [sortBy]: sortOrder === 'asc' ? 1 : -1
+        })
+        .limit(pageSize)
+        .skip(pageSize * (page - 1));
+    
+        return res.send({
             status: 'success',
-            data: userResponse
+            data: {
+                totalUser,
+                users,
+                page,
+                pageSize
+            }
         })
-
-    } else {
-        return res.status(500).send({
-            status: 'error',
-            message: 'User does not exist'
-        })
+    } catch(err) {
+        next(err)
     }
+
 }
 
-async function login(req, res) {
+async function fetchUser(req, res, next) {
 
-    const user = req.body;
-
-    let {email, password} = user;
-
-    let existingUser = await userModel.findOne({
-        email
-    })
-
-    if (existingUser) {
-        let match = bcrypt.compareSync(password, existingUser.password);
-
-        if (match) {
-            // produce a JWT token
-            let token = generateToken(existingUser);
-
+    try {
+        const {id} = req.params;
+    
+        const user = await userModel.findById(id)
+    
+        if (user) {
+            let userResponse = user.toJSON()
+    
+            delete userResponse.password;
+    
             return res.status(200).send({
                 status: 'success',
-                data: {
-                    token
-                }
+                data: userResponse
+            })
+    
+        } else {
+            
+            return res.status(500).send({
+                status: 'error',
+                message: 'User does not exist'
+            })
+        }
+    } catch(err) {
+        next(err)
+    }
+
+}
+
+async function login(req, res, next) {
+
+    try {
+        const user = req.body;
+    
+        let {email, password} = user;
+    
+        let existingUser = await userModel.findOne({
+            email
+        })
+    
+        if (existingUser) {
+            let match = bcrypt.compareSync(password, existingUser.password);
+    
+            if (match) {
+                // produce a JWT token
+                let token = generateUserToken(existingUser);
+    
+                return res.status(200).send({
+                    status: 'success',
+                    data: {
+                        token
+                    }
+                })
+            } else {
+                return res.status(400).send({
+                    status: 'error',
+                    message: 'Password is wrong'
+                })
+            }
+        } else {
+    
+            return res.status(400).send({
+                status: 'error',
+                message: 'User does not exist with the given email'
+            })
+        }
+    }  catch(err) {
+        next(err)
+    }
+
+}
+
+async function getLoggedInUser(req, res, next) {
+
+    try {
+        const {user} = req;
+    
+        if (user) {
+            return res.status(200).send({
+                status: 'success',
+                data: user
             })
         } else {
             return res.status(400).send({
                 status: 'error',
-                message: 'Password is wrong'
+                message: 'User not logged in'
             })
         }
-    } else {
+    } catch(err) {
+        next(err)
+    }
 
-        return res.status(400).send({
-            status: 'error',
-            message: 'User does not exist with the given email'
+}
+
+async function register(req, res, next) {
+    try {
+
+        const user = req.body;
+    
+        let {name, email, password} = user;
+    
+        let existingUser = await userModel.findOne({
+            email
         })
+    
+        if (existingUser) {
+            return res.status(400).send({
+                status: 'error',
+                message: 'User already exists with the given email'
+            })
+        } else {
+            password = bcrypt.hashSync(password);
+            let user = await userModel.create({
+                name, email, password
+            })
+    
+            user = user.toJSON();
+    
+            delete user.password;
+    
+            return res.status(200).send({
+                status: 'success',
+                data: user
+            })
+        }
+    } catch(err) {
+        next(err)
     }
 }
 
-async function getLoggedInUser(req, res) {
-
-    const {user} = req;
-
-    if (user) {
-        return res.status(200).send({
-            status: 'success',
-            data: user
-        })
-    } else {
-        return res.status(400).send({
-            status: 'error',
-            message: 'User not logged in'
-        })
-    }
-}
-
-async function register(req, res) {
-    const user = req.body;
-
-    let {name, email, password} = user;
-
-    let existingUser = await userModel.findOne({
-        email
-    })
-
-    if (existingUser) {
-        return res.status(400).send({
-            status: 'error',
-            message: 'User already exists with the given email'
-        })
-    } else {
-        password = bcrypt.hashSync(password);
-        let user = await userModel.create({
-            name, email, password
-        })
-
-        user = user.toJSON();
-
-        delete user.password;
-
-        return res.status(200).send({
-            status: 'success',
-            data: user
-        })
-    }
-}
-
-async function githubSignin(req, res) {
+async function githubSignin(req, res, next) {
 
     try {
         const {code} = req.query
@@ -175,7 +201,7 @@ async function githubSignin(req, res) {
             })
         }
         
-        let token = generateToken(existingUser);
+        let token = generateUserToken(existingUser);
 
         return res.status(200).send({
             status: 'success',
@@ -186,11 +212,7 @@ async function githubSignin(req, res) {
 
     } catch(err) {
 
-        console.error(err)
-        return res.status(400).send({
-            status: 'success',
-            message: 'Something went wrong'
-        })
+        next(err);
     }
 }
 

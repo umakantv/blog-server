@@ -11,7 +11,7 @@ const commentSchema = new mongoose.Schema({
         name: String,
         image: String,
     },
-    blogId: String,
+    postId: String,
     likeCount: {
         type: Number,
         default: 0

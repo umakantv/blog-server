@@ -12,7 +12,14 @@ const followerSchema = new mongoose.Schema({
         name: String,
         image: String,
     },
-    following: {
+    followingEntityType: {
+        type: String,
+        enum: ['user', 'tag'],
+    },
+    tag: {
+        name: String,
+    },
+    user: {
         _id: String,
         name: String,
         image: String,
