@@ -62,7 +62,7 @@ async function githubSignin(req, res, next) {
   try {
     const { code } = req.params;
 
-    let token = authService.githubSignin(code);
+    let { token } = await authService.githubSignin(code);
 
     return res.status(200).send({
       status: "success",
