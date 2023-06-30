@@ -75,6 +75,7 @@ async function githubSignin(code) {
     existingUser = await userModel.create({
       authType: "github",
       name: userDetails.name,
+      username: userDetails.login,
       githubUsername: userDetails.login,
       image: userDetails.avatar_url,
       email: userDetails.email,
