@@ -38,7 +38,7 @@ function validateLoginCredentials(emailOrUsername, password) {
       password,
     });
   } else {
-    validateUsername(username);
+    validateUsername(emailOrUsername);
     return validate(loginWithUsername, {
       username: emailOrUsername,
       password,
