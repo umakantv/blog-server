@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const { validate } = require("./index");
+const AppError = require("../utils/AppError");
 
 const username = Joi.string()
   .required()
@@ -49,7 +50,7 @@ function validateUsername(value) {
   try {
     validate(username, value);
   } catch (err) {
-    throw new Error("Not a valid username");
+    throw new AppError("Not a valid username", 400);
   }
 }
 

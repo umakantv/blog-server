@@ -83,7 +83,7 @@ async function checkUsernameAvailable(req, res, next) {
     let taken = await authService.checkUsernameTaken(username);
 
     if (taken) {
-      return res.status(400).send({
+      return res.status(409).send({
         status: "success",
         data: {
           message: "Username is not available",
