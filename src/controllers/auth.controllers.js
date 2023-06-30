@@ -41,10 +41,11 @@ async function getLoggedInUser(req, res, next) {
 
 async function register(req, res, next) {
   try {
-    let { name, email, password } = req.body;
+    let { name, username, email, password } = req.body;
 
     let user = await authService.register({
       name,
+      username,
       email,
       password,
     });
@@ -75,9 +76,36 @@ async function githubSignin(req, res, next) {
   }
 }
 
+async function checkUsernameAvailable(req, res, next) {
+  try {
+    const { username } = req.params;
+
+    let taken = await authService.checkUsernameTaken(username);
+
+    if (taken) {
+      return res.status(400).send({
+        status: "success",
+        data: {
+          message: "Username is not available",
+        },
+      });
+    }
+
+    return res.status(200).send({
+      status: "success",
+      data: {
+        message: "Username is available",
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   register,
   login,
   getLoggedInUser,
   githubSignin,
+  checkUsernameAvailable,
 };

@@ -4,12 +4,16 @@ const GithubService = require("./github");
 const userModel = require("../database/user.model");
 const { generateToken } = require("../utils/tokens");
 let githubService = new GithubService();
+const { validate } = require("../validators");
+const authValidators = require("../validators/auth.validators");
 
 function generateUserToken(user) {
   return generateToken(user);
 }
 
 async function login(emailOrUsername, password) {
+  authValidators.validateLoginCredentials(emailOrUsername, password);
+
   let existingUser = await userModel.findOne({
     $or: [
       {
@@ -40,17 +44,29 @@ async function login(emailOrUsername, password) {
   }
 }
 
-async function register({ name, email, password }) {
-  let existingUser = await userModel.findOne({
+async function register({ name, username, email, password }) {
+  authValidators.validateUsername(username);
+  validate(authValidators.register, {
+    name,
     email,
+    username,
+    password,
+  });
+
+  let existingUser = await userModel.findOne({
+    $or: [{ email }, { username }],
   });
 
   if (existingUser) {
-    throw new AppError("User already exists with the given email", 400);
+    throw new AppError(
+      "User already exists with the given email or username",
+      400
+    );
   } else {
     password = bcrypt.hashSync(password);
     let user = await userModel.create({
       name,
+      username,
       email,
       password,
     });
@@ -64,6 +80,8 @@ async function register({ name, email, password }) {
 }
 
 async function githubSignin(code) {
+  validate(authValidators.githubSigninCode, code);
+
   const userDetails = await githubService.getUser(code);
 
   let existingUser = await userModel.findOne({
@@ -90,8 +108,21 @@ async function githubSignin(code) {
   return { token, user };
 }
 
+async function checkUsernameTaken(username) {
+  authValidators.validateUsername(username);
+
+  let existingUser = await userModel.findOne({
+    username,
+  });
+
+  if (existingUser) return true;
+
+  return false;
+}
+
 module.exports = {
   login,
   register,
   githubSignin,
+  checkUsernameTaken,
 };
