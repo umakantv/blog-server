@@ -9,9 +9,16 @@ function generateUserToken(user) {
   return generateToken(user);
 }
 
-async function login(email, password) {
+async function login(emailOrUsername, password) {
   let existingUser = await userModel.findOne({
-    email,
+    $or: [
+      {
+        email: emailOrUsername,
+      },
+      {
+        username: emailOrUsername,
+      },
+    ],
   });
 
   if (existingUser) {
