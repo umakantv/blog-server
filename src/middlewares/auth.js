@@ -1,38 +1,39 @@
 const logger = require("../utils/logger");
 const LogCodes = require("../config/LogCodes");
 const userService = require("../services/users.service");
-const { verifyToken } = require('../utils/tokens');
+const { verifyToken } = require("../utils/tokens");
 
 async function auth(req, res, next) {
+  let token = req.headers.authorization || "";
 
-    let token = req.headers.authorization || '';
+  token = token.split(" ")[1];
 
-    token = token.split(' ')[1];
+  if (token) {
+    try {
+      const result = verifyToken(token);
 
-    if (token) {
+      let user = await userService.getUser(result._id);
 
-        try {
-            const result = verifyToken(token);
+      req.user = user;
 
-            let user = await userService.getUser(result._id);
-    
-            req.user = user;
-
-            logger.info(LogCodes.AUTHENTICATED_REQUEST, {
-                ...req.meta,
-                user_id: user._id,
-            })
-
-        } catch(err) {
-            // No action to take
-        }
+      logger.info(LogCodes.AUTHENTICATED_REQUEST, {
+        request: {
+          ...req.meta,
+        },
+        user_id: user._id,
+      });
+    } catch (err) {
+      // No action to take
     }
+  }
 
-    if (!req.user) {
-        logger.warn(LogCodes.UNAUTHENTICATED_REQUEST, req.meta)
-    }
+  if (!req.user) {
+    logger.warn(LogCodes.UNAUTHENTICATED_REQUEST, {
+      request: { ...req.meta },
+    });
+  }
 
-    next();
+  next();
 }
 
 module.exports = auth;

@@ -1,11 +1,12 @@
-const logger = require('../utils/logger');
-const LogCodes = require('../utils/LogCodes');
+const logger = require("../utils/logger");
+const LogCodes = require("../utils/LogCodes");
 
 function logRequestReceived(req, res, next) {
+  logger.info(LogCodes.REQUEST_RECEIVED, {
+    request: { ...req.meta },
+  });
 
-    logger.info(LogCodes.REQUEST_RECEIVED, req.meta)
-
-    next();
+  next();
 }
 
 module.exports = logRequestReceived;
