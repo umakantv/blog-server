@@ -8,6 +8,7 @@ const {
   createBlogValidator,
   idValidator,
 } = require("../validators/blog.validators");
+const { addTags } = require("./tags.service");
 
 async function getPosts({
   search,
@@ -81,23 +82,39 @@ async function createPost(post, user) {
   post.author = {
     _id: user._id,
     name: user.name,
+    username: user.username,
     image: user.image,
   };
 
   post.slug = createSlug(post.title) + "-" + Date.now().toString();
 
-  const blogData = await postModel.create(post);
+  let tags = [...new Set(post.tags.filter((tag) => tag !== ""))];
+  tags = tags.map((tag) => createSlug(tag));
+  await addTags(tags);
+  post.tags = tags;
+
+  let { excerpt } = post;
+
+  if (!excerpt) {
+    excerpt = post.content.split("\n")[0];
+    if (excerpt.split(" ").length > 100) {
+      excerpt = post.content.split(" ").slice(0, 50).join(" ");
+    }
+    post.excerpt = excerpt;
+  }
+
+  const createdPost = await postModel.create(post);
 
   // No need to await this
   userModel
     .findByIdAndUpdate(user._id, {
       $inc: {
-        blogsCount: 1,
+        postsCount: 1,
       },
     })
     .then(() => {});
 
-  return blogData;
+  return createdPost;
 }
 
 async function getPostBySlug(slug) {
