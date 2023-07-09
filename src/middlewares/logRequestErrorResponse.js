@@ -21,8 +21,8 @@ function logRequestErrorResponse(err, req, res, next) {
     description,
     request: {
       ...req.meta,
-      context,
     },
+    context,
   });
 
   next(err);

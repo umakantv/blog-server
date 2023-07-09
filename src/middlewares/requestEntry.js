@@ -1,22 +1,20 @@
-const { randomUUID } = require('crypto');
+const { randomUUID } = require("crypto");
 
 function requestEntry(req, res, next) {
+  let requestId = req.headers.request_id;
 
-    let requestId = req.headers.request_id;
+  if (!requestId) {
+    requestId = randomUUID();
 
-    if (!requestId) {
-        requestId = randomUUID();
+    req.headers.request_id = requestId;
 
-        req.headers.request_id = requestId;
+    req.meta = {
+      request_id: req.headers.request_id,
+      method: req.method,
+    };
+  }
 
-        req.meta = {
-            request_id: req.headers.request_id,
-            method: req.method,
-            path: req.path,
-        }
-    }
-
-    next();
+  next();
 }
 
 module.exports = requestEntry;
