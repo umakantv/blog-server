@@ -1,5 +1,5 @@
 import config from "./config/index";
-// import trace from "./utils/tracing";
+import trace from "./utils/tracing";
 import express from "express";
 import { connectDatabase } from "./database/connectDB";
 import initiateRoutes from "./routes";
@@ -9,7 +9,7 @@ import {
 } from "./middlewares";
 
 // console.log("Starting server with env:", config.NODE_ENV);
-// trace(config.APP_NAME);
+trace(config.APP_NAME);
 
 const app = express();
 
