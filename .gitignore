@@ -2,3 +2,5 @@ node_modules
 environment/.env.*
 !environment/.env.sample
 logs
+
+dist
