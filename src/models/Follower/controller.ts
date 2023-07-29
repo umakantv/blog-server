@@ -1,8 +1,14 @@
-import followerModel from "../database/follower.model";
-import userModel from "../database/user.model";
-import { follow as followUserOrTag } from "../services/followers.service";
+import { type NextFunction, type Request, type Response } from "express";
+import followerModel from "./repo";
+import userModel from "../User/repo";
+import { follow as followUserOrTag } from "./service";
+import { RequestContext } from "../../types/Context";
 
-export async function follow(req, res, next) {
+export async function follow(
+  req: RequestContext,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { user } = req;
 
@@ -74,7 +80,11 @@ export async function follow(req, res, next) {
   }
 }
 
-export async function unfollow(req, res, next) {
+export async function unfollow(
+  req: RequestContext,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { user } = req;
 
@@ -122,7 +132,11 @@ export async function unfollow(req, res, next) {
   }
 }
 
-export async function followers(req, res, next) {
+export async function followers(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { userId } = req.params;
 
@@ -139,7 +153,11 @@ export async function followers(req, res, next) {
   }
 }
 
-export async function following(req, res, next) {
+export async function following(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { userId } = req.params;
 

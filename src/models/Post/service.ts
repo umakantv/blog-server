@@ -1,14 +1,14 @@
-import postModel from "../database/post.model";
-import userModel from "../database/user.model";
-import { createSlug } from "../utils";
-import AppError from "../utils/AppError";
-import { validate } from "../validators";
+import postModel from "./repo";
+import userModel from "../User/repo";
+import { createSlug } from "../../utils";
+import AppError from "../../utils/AppError";
+import { validate } from "../../validators";
 import {
   getBlogsValidator,
   createBlogValidator,
   idValidator,
-} from "../validators/blog.validators";
-import { addTags } from "./tags.service";
+} from "./validator";
+import { addTags } from "../Tag/service";
 
 export async function getPosts({
   search,

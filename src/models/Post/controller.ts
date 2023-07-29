@@ -1,10 +1,16 @@
+import { type NextFunction, type Request, type Response } from "express";
 import {
   getPosts,
   createPost as addPost,
   getPostBySlug as getSinglePost,
-} from "../services/posts.service";
+} from "./service";
+import { RequestContext } from "../../types/Context";
 
-export async function getPostsPaginated(req, res, next) {
+export async function getPostsPaginated(
+  req: RequestContext,
+  res: Response,
+  next: NextFunction
+) {
   try {
     let {
       search = "",
@@ -40,7 +46,11 @@ export async function getPostsPaginated(req, res, next) {
   }
 }
 
-export async function createPost(req, res, next) {
+export async function createPost(
+  req: RequestContext,
+  res: Response,
+  next: NextFunction
+) {
   let { body: postData, user } = req;
 
   try {
@@ -55,7 +65,11 @@ export async function createPost(req, res, next) {
   }
 }
 
-export async function getPostById(req, res, next) {
+export async function getPostById(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { id } = req.params;
     let post = await getSinglePost(id);

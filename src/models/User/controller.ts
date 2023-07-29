@@ -1,13 +1,23 @@
-import * as userService from "../services/users.service";
+import * as userService from "./service";
+import { type NextFunction, type Request, type Response } from "express";
 
-export async function fetchUsersPaginated(req, res, next) {
+export async function fetchUsersPaginated(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    const {
+    let {
       pageSize = 10,
       page = 1,
       sortBy = "createdAt",
       sortOrder = "desc",
     } = req.query;
+
+    sortBy = String(sortBy);
+    sortOrder = String(sortOrder);
+    page = parseInt(String(page));
+    pageSize = parseInt(String(pageSize));
 
     const { totalUser, users } = await userService.fetchUsersPaginated({
       pageSize,
@@ -30,7 +40,11 @@ export async function fetchUsersPaginated(req, res, next) {
   }
 }
 
-export async function fetchUser(req, res, next) {
+export async function fetchUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { id } = req.params;
 

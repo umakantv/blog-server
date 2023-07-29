@@ -4,7 +4,7 @@ import {
   follow,
   following,
   followers,
-} from "../controllers/follower.controllers";
+} from "../models/Follower/controller";
 
 const followerRouter = express.Router();
 

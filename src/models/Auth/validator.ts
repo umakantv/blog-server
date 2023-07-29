@@ -1,6 +1,6 @@
 import Joi from "joi";
-import { validate } from "./index";
-import AppError from "../utils/AppError";
+import { validate } from "../../validators/index";
+import AppError from "../../utils/AppError";
 
 export const username = Joi.string()
   .required()
@@ -31,7 +31,10 @@ export const loginWithUsername = Joi.object({
  * @param {string} emailOrUsername
  * @param {string} password
  */
-export function validateLoginCredentials(emailOrUsername, password) {
+export function validateLoginCredentials(
+  emailOrUsername: string,
+  password: string
+) {
   if (emailOrUsername.includes("@")) {
     return validate(loginWithEmail, {
       email: emailOrUsername,
@@ -46,7 +49,7 @@ export function validateLoginCredentials(emailOrUsername, password) {
   }
 }
 
-export function validateUsername(value) {
+export function validateUsername(value: string) {
   try {
     validate(username, value);
   } catch (err) {

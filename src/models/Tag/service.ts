@@ -1,4 +1,4 @@
-import tagModel from "../database/tag.model";
+import tagModel from "./repo";
 
 export async function searchTags(substring: string) {
   let tags = await tagModel

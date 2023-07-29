@@ -1,10 +1,10 @@
 import bcrypt from "bcryptjs";
-import AppError from "../utils/AppError";
-import GithubService from "./github";
-import userModel from "../database/user.model";
-import { generateToken } from "../utils/tokens";
-import { validate } from "../validators";
-import * as authValidators from "../validators/auth.validators";
+import AppError from "../../utils/AppError";
+import GithubService from "../GithubOAuth/github";
+import userModel from "../User/repo";
+import { generateToken } from "../../utils/tokens";
+import { validate } from "../../validators";
+import * as authValidators from "./validator";
 
 let githubService = new GithubService();
 

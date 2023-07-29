@@ -1,7 +1,7 @@
-import followerModel from "../database/follower.model";
-import tagModel from "../database/tag.model";
-import AppError from "../utils/AppError";
-import userModel from "../database/user.model";
+import followerModel from "./repo";
+import tagModel from "../Tag/repo";
+import AppError from "../../utils/AppError";
+import userModel from "../User/repo";
 
 export async function follow({ user, followingUserId, tagName }) {
   if (!user) {

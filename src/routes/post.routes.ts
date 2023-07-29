@@ -1,14 +1,10 @@
 import express from "express";
-import {
-  createPost,
-  getPostsPaginated,
-  getPostById,
-} from "../controllers/post.controllers";
+import * as postController from "../models/Post/controller";
 
 const blogRouter = express.Router();
 
-blogRouter.post("/", createPost);
-blogRouter.get("/:id", getPostById);
-blogRouter.get("/", getPostsPaginated);
+blogRouter.post("/", postController.createPost);
+blogRouter.get("/:id", postController.getPostById);
+blogRouter.get("/", postController.getPostsPaginated);
 
 export default blogRouter;

@@ -1,6 +1,6 @@
 import logger from "../utils/logger";
 import LogCodes from "../config/LogCodes";
-import * as userService from "../services/users.service";
+import * as userService from "../models/User/service";
 import { verifyToken } from "../utils/tokens";
 
 export default async function auth(req, res, next) {

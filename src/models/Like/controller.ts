@@ -1,5 +1,6 @@
-import postModel from "../database/post.model";
-import commentsModel from "../database/comment.model";
+import postModel from "../Post/repo";
+import commentsModel from "../Comment/repo";
+import { type NextFunction, type Request, type Response } from "express";
 
 // TODO
 /**
@@ -10,7 +11,7 @@ import commentsModel from "../database/comment.model";
  * User must be logged in
  * We must not add duplicate likes
  */
-export async function like(req, res) {}
+export async function like(req: Request, res: Response, next: NextFunction) {}
 
 // TODO
 /**
@@ -20,7 +21,11 @@ export async function like(req, res) {}
  *
  * User must be logged in
  */
-export async function removeLike(req, res) {}
+export async function removeLike(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {}
 
 // TODO
 /**
@@ -28,4 +33,8 @@ export async function removeLike(req, res) {}
  *
  * Request will have either of the query params: blogId or commentId
  */
-export async function getAllLikes(req, res) {}
+export async function getAllLikes(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {}

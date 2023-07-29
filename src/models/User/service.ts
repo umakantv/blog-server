@@ -1,6 +1,6 @@
 import { isValidObjectId } from "mongoose";
-import userModel from "../database/user.model";
-import AppError from "../utils/AppError";
+import userModel from "./repo";
+import AppError from "../../utils/AppError";
 
 export async function fetchUsersPaginated({
   pageSize = 10,
@@ -27,7 +27,7 @@ export async function fetchUsersPaginated({
   };
 }
 
-export async function getUser(idOrUsername) {
+export async function getUser(idOrUsername: string) {
   let user;
 
   if (isValidObjectId(idOrUsername)) {

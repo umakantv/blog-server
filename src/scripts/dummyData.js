@@ -6,10 +6,10 @@ const { connectDatabase } = require("../database/connectDB.js");
 const { faker } = require("@faker-js/faker");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const postModel = require("../database/post.model.js");
-const userModel = require("../database/user.model.js");
-const tagModel = require("../database/tag.model.js");
-const commentsModel = require("../database/comment.model.js");
+const postModel = require("../models/Post/repo.js");
+const userModel = require("../models/User/repo.js");
+const tagModel = require("../models/Tag/repo.js");
+const commentsModel = require("../models/Comment/repo.js");
 const { createSlug } = require("../utils/index.js");
 
 const imageModules = [
