@@ -1,6 +1,6 @@
 import followerModel from "./repo";
 import tagModel from "../Tag/repo";
-import AppError from "../../utils/AppError";
+import AppError from "../../packages/Error/AppError";
 import userModel from "../User/repo";
 
 export async function follow({ user, followingUserId, tagName }) {

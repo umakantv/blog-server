@@ -1,6 +1,6 @@
-import logger from "../utils/logger";
-import LogCodes from "../config/LogCodes";
-import AppError from "../utils/AppError";
+import logger from "../packages/Logs/logger";
+import LogCodes from "../packages/Logs/LogCodes";
+import AppError from "../packages/Error/AppError";
 
 /**
  * @param {AppError} err

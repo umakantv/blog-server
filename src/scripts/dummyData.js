@@ -10,7 +10,7 @@ const postModel = require("../models/Post/repo.js");
 const userModel = require("../models/User/repo.js");
 const tagModel = require("../models/Tag/repo.js");
 const commentsModel = require("../models/Comment/repo.js");
-const { createSlug } = require("../utils/index.js");
+const { createSlug } = require("../utils/strings.js");
 
 const imageModules = [
   "abstract",

@@ -1,6 +1,6 @@
 import morgan from "morgan";
-import logger from "../utils/logger";
-import LogCodes from "../config/LogCodes";
+import logger from "../packages/Logs/logger";
+import LogCodes from "../packages/Logs/LogCodes";
 
 const httpLogger = morgan(
   function (tokens, req: any, res) {

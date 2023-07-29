@@ -1,6 +1,6 @@
 import Joi from "joi";
-import { validate } from "../../validators/index";
-import AppError from "../../utils/AppError";
+import { validate } from "../../packages/Validator/index";
+import AppError from "../../packages/Error/AppError";
 
 export const username = Joi.string()
   .required()

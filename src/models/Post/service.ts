@@ -1,8 +1,8 @@
 import postModel from "./repo";
 import userModel from "../User/repo";
-import { createSlug } from "../../utils";
-import AppError from "../../utils/AppError";
-import { validate } from "../../validators";
+import { createSlug } from "../../utils/strings";
+import AppError from "../../packages/Error/AppError";
+import { validate } from "../../packages/Validator";
 import {
   getBlogsValidator,
   createBlogValidator,

@@ -1,5 +1,5 @@
 import Joi from "joi";
-import AppError from "../utils/AppError";
+import AppError from "../Error/AppError";
 
 /**
  *

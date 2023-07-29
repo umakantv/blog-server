@@ -1,5 +1,5 @@
-import logger from "../utils/logger";
-import LogCodes from "../config/LogCodes";
+import logger from "../packages/Logs/logger";
+import LogCodes from "../packages/Logs/LogCodes";
 import * as userService from "../models/User/service";
 import { verifyToken } from "../utils/tokens";
 
