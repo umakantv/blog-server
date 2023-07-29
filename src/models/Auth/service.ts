@@ -5,7 +5,6 @@ import userModel from "../User/repo";
 import { generateToken } from "../../utils/tokens";
 import { validate } from "../../packages/Validator";
 import * as authValidators from "./validator";
-import { ContextUser } from "../../types/User";
 
 let githubService = new GithubService();
 
