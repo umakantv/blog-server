@@ -1,16 +1,17 @@
-require("dotenv").config({
+import { faker } from "@faker-js/faker";
+import { connectDatabase } from "../database/connectDB";
+import bcrypt from "bcryptjs";
+import * as crypto from "crypto";
+import { config } from "dotenv";
+import postModel from "../models/Post/repo";
+import userModel from "../models/User/repo";
+import tagModel from "../models/Tag/repo";
+import commentsModel from "../models/Comment/repo";
+import { createSlug } from "../utils/strings";
+
+config({
   path: `./environment/.env.development`,
 });
-
-const { connectDatabase } = require("../database/connectDB.js");
-const { faker } = require("@faker-js/faker");
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
-const postModel = require("../models/Post/repo.js");
-const userModel = require("../models/User/repo.js");
-const tagModel = require("../models/Tag/repo.js");
-const commentsModel = require("../models/Comment/repo.js");
-const { createSlug } = require("../utils/strings.js");
 
 const imageModules = [
   "abstract",
@@ -48,7 +49,7 @@ const allTags = [
   "load-balancer",
 ];
 
-async function createDummyUsers(count) {
+async function createDummyUsers(count: number) {
   // create 500 dummy users
 
   const users = [];
@@ -83,7 +84,7 @@ async function createDummyUsers(count) {
   await userModel.insertMany(users);
 }
 
-async function createDummyPosts(count) {
+async function createDummyPosts(count: number) {
   console.log("Count", count);
   const users = await userModel.find();
 
@@ -138,7 +139,7 @@ async function createDummyPosts(count) {
   console.log("Done");
 }
 
-async function addDummyComments(count) {
+async function addDummyComments(count: number) {
   const comments = [];
 
   const users = await userModel.find();
@@ -182,8 +183,8 @@ async function addTags() {
   console.log("Added tags");
 }
 
-connectDatabase()
-  // .then(() => addTags())
-  // .then(() => createDummyUsers(500))
-  .then(() => createDummyPosts(5000))
-  .then(() => addDummyComments(15000));
+connectDatabase();
+// .then(() => addTags())
+// .then(() => createDummyUsers(500))
+// .then(() => createDummyPosts(5000))
+// .then(() => addDummyComments(15000));

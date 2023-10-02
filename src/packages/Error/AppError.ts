@@ -1,3 +1,5 @@
+import { Errors } from "./Errors";
+
 export default class AppError extends Error {
   status: any;
   code: string;
@@ -13,7 +15,9 @@ export default class AppError extends Error {
     super(error);
     this.status = status;
     this.code = code;
-    this.description = description;
+
+    const errorObject = Errors[error] || Errors["UNKNOWN_ERROR"];
+    this.description = description || errorObject.description;
     this.meta = meta;
   }
 }

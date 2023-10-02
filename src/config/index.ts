@@ -20,6 +20,10 @@ const CAPTURE_PROMETHEUS_METRIC =
 const TRACE_ENDPOINT =
   process.env.TRACE_ENDPOINT || "http://localhost:14268/api/traces";
 
+const EMAIL_SMTP = process.env.EMAIL_SMTP;
+const EMAIL_ID = process.env.EMAIL_ID;
+const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
+
 export default {
   NODE_ENV,
   PORT,
@@ -30,4 +34,9 @@ export default {
   GITHUB_OAUTH_CLIENT_SECRET,
   CAPTURE_PROMETHEUS_METRIC,
   TRACE_ENDPOINT,
+  EMAIL: {
+    EMAIL_SMTP,
+    EMAIL_ID,
+    EMAIL_PASSWORD,
+  },
 };

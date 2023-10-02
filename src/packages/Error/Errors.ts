@@ -1,18 +1,33 @@
+export const ErrorCodes = {
+  // Generic Errors
+  UNKNOWN_ERROR: "UNKNOWN_ERROR",
+  UNAUTHENTICATED: "UNAUTHENTICATED",
+  ENTITY_NOT_FOUND: "ENTITY_NOT_FOUND",
+  ENTITY_ALREADY_EXISTS: "ENTITY_ALREADY_EXISTS",
+  INVALID_INPUT: "INVALID_INPUT",
 
-const errorCodes = {
-    POST_DOES_NOT_EXIST: 'POST_DOES_NOT_EXIST',
-}
+  // Profile Errors
+  PROFILE_USER_MISMATCH: "PROFILE_USER_MISMATCH",
+  USERNAME_TAKEN: "USERNAME_TAKEN",
 
-const errors = {
-    POST_DOES_NOT_EXIST: {
-        code: 'POST_DOES_NOT_EXIST', 
-        status: 400, 
-        message: 'Post does not exist',
-        description: 'Post does not exist',
-    }
-}
+  // User Errors
+  USER_ALREADY_EXISTS: "USER_ALREADY_EXISTS",
+  UNVERIFIED_EMAIL: "UNVERIFIED_EMAIL",
+  VERIFY_OTP_EXPIRED: "VERIFY_OTP_EXPIRED",
+  RESET_PASSWORD_OTP_EXPIRED: "RESET_PASSWORD_OTP_EXPIRED",
+  OTP_MISMATCH: "OTP_MISMATCH",
+  USER_ALREADY_VERIFIED: "USER_ALREADY_VERIFIED",
+  INVALID_CREDENTIALS: "INVALID_CREDENTIALS",
 
-module.exports = {
-    errors,
-    errorCodes,
-}
+  // Post Errors
+  POST_DOES_NOT_EXIST: "POST_DOES_NOT_EXIST",
+};
+
+export const Errors = {
+  POST_DOES_NOT_EXIST: {
+    code: "POST_DOES_NOT_EXIST",
+    status: 400,
+    message: "Post does not exist",
+    description: "Post does not exist",
+  },
+};

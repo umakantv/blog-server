@@ -3,4 +3,5 @@ export type ContextUser = {
   name: string;
   image: string;
   username: string;
+  verified: boolean;
 };

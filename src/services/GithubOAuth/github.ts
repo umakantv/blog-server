@@ -2,14 +2,20 @@ import axios from "axios";
 import config from "../../config";
 
 export default class GithubService {
-  async getAccessToken(code: string) {
+  static async getAccessToken(code: string) {
     try {
       let clientId = config.GITHUB_OAUTH_CLIENT_ID;
       let clientSecret = config.GITHUB_OAUTH_CLIENT_SECRET;
 
-      let url = `https://github.com/login/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}`;
+      let url = `https://github.com/login/oauth/access_token`;
 
-      let response = await axios.post(url);
+      let response = await axios.post(url, null, {
+        params: {
+          client_id: clientId,
+          client_secret: clientSecret,
+          code: code,
+        },
+      });
 
       const result = new URLSearchParams(response.data);
 
@@ -26,7 +32,7 @@ export default class GithubService {
     }
   }
 
-  async getUser(code: string) {
+  static async getUser(code: string) {
     try {
       const token = await this.getAccessToken(code);
 
